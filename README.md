@@ -3,10 +3,7 @@ Playing with docker, continuous integration and automatic deploy.
 
 Original article [Node With Docker - Continuous Integration and Delivery](http://mherman.org/blog/2015/03/06/node-with-docker-continuous-integration-and-delivery/#.VQ9YhZPF-6B).
 
-
-# Steps:
-
-## Install
+# Install
 
 ```bash
 brew update
@@ -30,11 +27,11 @@ To connect the Docker client to the Docker daemon, please set:
 
 $exports (do exports)
 
-## Example project
+# Example project
 
-### Dockerfiles
+## Dockerfiles
 
-#### app/Dockerfile
+### app/Dockerfile
 
 ```javascript
 FROM dockerfile/nodejs
@@ -52,9 +49,9 @@ EXPOSE 3000
 CMD npm start
 ```
 
-#### redis/Dockerfile
+### redis/Dockerfile
 
-### Docker-composer file (docker-example.yml)
+## Docker-composer file (docker-example.yml)
 ```javascript
 web:
   build: ./app
@@ -74,5 +71,30 @@ redis:
 $docker-compose up (prepare the containers, get and start all the dependencies defined in Dockerfiles)
 ```
 
+# Continuous Integration
 
+## Docker Hub
+1. Signup using your Github credentials.
+2. Set up a new automated build:
+..1 Add a clone of this, replicated on your github account.
+..2 “Dockerfile Location” - change that to “/app”. 
+
+## CircleCI
+1. Signup using Github credentials.
+2. Create a new project using the Github repo you created.
+3. Use the configuration file (circle.yml).
+```javascript
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - curl -L https://github.com/docker/compose/releases/download/1.1.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose chmod +x /usr/local/bin/docker-compose
+
+test:
+  override:
+    - docker-compose run -d --no-deps web
+    - cd app; mocha
+```
 
