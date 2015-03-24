@@ -36,7 +36,7 @@ $exports (do exports)
 
 #### app/Dockerfile
 
-´´´javascript
+```javascript
 FROM dockerfile/nodejs
 
 RUN mkdir /src
@@ -50,7 +50,7 @@ RUN npm install
 EXPOSE 3000
 
 CMD npm start
-´´´
+```
 
 #### redis/Dockerfile
 
