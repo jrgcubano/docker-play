@@ -10,8 +10,8 @@ brew update
 brew install docker
 brew install boot2docker
 brew install docker-composer
-$boot2docker init
-$boot2docker up
+boot2docker init
+boot2docker up
 Waiting for VM and Docker daemon to start...
 .........................ooooooooooooooooooooooooooooo
 Started.
@@ -73,13 +73,13 @@ $docker-compose up (prepare the containers, get and start all the dependencies d
 
 # Continuous Integration
 
-## Docker Hub
+## Docker Hub (1)
 1. Signup using your Github credentials.
 2. Set up a new automated build:
 ..1 Add a clone of this, replicated on your github account.
 ..2 “Dockerfile Location” - change that to “/app”. 
 
-## CircleCI
+## CircleCI (1)
 1. Signup using Github credentials.
 2. Create a new project using the Github repo you created.
 3. Use the configuration file (circle.yml).
@@ -98,3 +98,35 @@ test:
     - cd app; mocha
 ```
 
+## Docker Hub (2)
+We want:
+1. CircleCI to run tests against the master branch then after they pass. 
+2. A new build should trigger on Docker Hub.
+
+Steps:
+Open your repository on Docker Hub, and make the following updates:
+1. Under Settings click Automated Build.
+2. Uncheck the Active box: “When active we will build when new pushes occur”. 2. Save the changes.
+3. Then once again under Settings click Build Triggers.
+4. Change the status to on.
+5. Copy the example curl command – i.e., $ curl --data "build=true" -X POST https://registry.hub.docker.com/u/jrgcubano/docker-play/trigger/43ad1511-5cdb-42aa-9bd7-b736c868c16f/.
+
+## CircleCI (2)
+1. Within the Project Settings, select Environment variables.
+2. Add a new variable with the name “DEPLOY” and paste the curl command as the value.
+3. Add this code to the bottom of circle.yml:
+```javascript
+deployment:
+  hub:
+    branch: master
+    commands:
+      - $DEPLOY
+```
+This simple fires the $DEPLOY variable after our tests pass on the master branch.
+
+## Final test
+1. Create a new branch
+2. Make changes locally
+3. Issue a pull request
+4. Manually merge once the tests pass
+5. Once the second round passes, a new build is triggered on Docker Hub
