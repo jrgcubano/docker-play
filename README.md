@@ -6,7 +6,6 @@ Original article [Node With Docker - Continuous Integration and Delivery](http:/
 # Install
 
 ```bash
-brew update
 brew install docker
 brew install boot2docker
 brew install docker-composer
@@ -28,6 +27,18 @@ To connect the Docker client to the Docker daemon, please set:
 $exports (do exports)
 
 # Example project
+
+## Clone or copy this files to a fresh repository
+```bash
+├── app
+│   ├── Dockerfile
+│   ├── index.js
+│   ├── package.json
+│   └── test
+│       └── test.js
+└── redis
+    └── Dockerfile
+```
 
 ## Dockerfiles
 
@@ -130,3 +141,5 @@ This simple fires the $DEPLOY variable after our tests pass on the master branch
 3. Issue a pull request
 4. Manually merge once the tests pass
 5. Once the second round passes, a new build is triggered on Docker Hub
+
+##Deployment
